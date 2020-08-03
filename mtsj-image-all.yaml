@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: image
+  name: image
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8084
+    name: http    
+  selector:
+    app: image
+  type: NodePort
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: image
+    version: "1.0"
+  name: image
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: image
+    spec:
+      containers:
+      - name: image
+        image: mtsj-image/java:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8084
+        resources: {}
+status: {}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: image
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - mtsj-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /mythaistar/services/rest/imagemanagement/v1    
+    route:
+    - destination:
+        port:
+          number: 80
+        host: image.default.svc.cluster.local
+---
