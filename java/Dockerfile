@@ -11,11 +11,6 @@ WORKDIR /app/mtsj-dish
 COPY mtsj-dish/ /app/mtsj-dish
 RUN mvn clean install
 
-run mkdir -p /app/mtsj-gateway
-WORKDIR /app/mtsj-gateway
-COPY mtsj-gateway/ /app/mtsj-gateway
-RUN mvn clean install
-
 run mkdir -p /app/mtsj-image
 WORKDIR /app/mtsj-image
 COPY mtsj-image/ /app/mtsj-image

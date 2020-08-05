@@ -26,14 +26,6 @@ services:
     networks:
       - my-thai-star  
       
-  mtsj-gateway:
-    build: 'java/mtsj-gateway/'
-    restart: always
-    container_name: 'mts_gateway'
-    image: mtsj-gateway/java:latest
-    networks:
-      - my-thai-star 
-
   mtsj-image:
     build: 'java/mtsj-image/'
     restart: always
