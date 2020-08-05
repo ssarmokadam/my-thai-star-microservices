@@ -10,6 +10,14 @@ services:
     networks:
       - my-thai-star
       
+  angular:
+    build: 'angular/'
+    restart: always
+    container_name: 'mts_angular'
+    image: my-thai-star/angular:latest
+    networks:
+      - my-thai-star
+      
   mtsj-booking:
     build: 'java/mtsj-booking/'
     restart: always
