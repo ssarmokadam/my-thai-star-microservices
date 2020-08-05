@@ -10,7 +10,7 @@ RUN yarn build --configuration=docker
 
 # 2. Deploy
 FROM nginx:latest
-RUN apt-get update \
+RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update \
   && apt-get install -y --no-install-recommends \
   apache2-utils curl \
   && rm -rf /var/lib/apt/lists/*
