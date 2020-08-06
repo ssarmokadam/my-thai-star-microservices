@@ -6,22 +6,22 @@ WORKDIR /app/mtsj-booking
 COPY mtsj-booking/ /app/mtsj-booking
 RUN mvn clean install
 
-run mkdir -p /app/mtsj-dish
+RUN mkdir -p /app/mtsj-dish
 WORKDIR /app/mtsj-dish
 COPY mtsj-dish/ /app/mtsj-dish
 RUN mvn clean install
 
-run mkdir -p /app/mtsj-image
+RUN mkdir -p /app/mtsj-image
 WORKDIR /app/mtsj-image
 COPY mtsj-image/ /app/mtsj-image
 RUN mvn clean install
 
-run mkdir -p /app/mtsj-order
+RUN mkdir -p /app/mtsj-order
 WORKDIR /app/mtsj-order
 COPY mtsj-order/ /app/mtsj-order
 RUN mvn clean install
 
-run mkdir -p /app/mtsj-user
+RUN mkdir -p /app/mtsj-user
 WORKDIR /app/mtsj-user
 COPY mtsj-user/ /app/mtsj-user
 RUN mvn clean install
