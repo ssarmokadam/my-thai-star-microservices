@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: booking
+  labels:
+    app: booking
+    service: booking
+spec:
+  ports:
+  - port: 80
+    name: http 
+  selector:
+    app: booking
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mtsj-booking
+  labels:
+    account: booking
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking-v1
+  labels:
+    app: booking
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: booking
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: booking
+        version: v1
+    spec:
+      serviceAccountName: mtsj-booking
+      containers:
+      - name: booking
+        image: docker.io/sujithmn1/mtsj-booking:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8082       
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: booking
+spec:
+  hosts:
+  - booking.default.svc.cluster.local
+  http:
+  - match:
+    - uri:
+        prefix: /mythaistar/services/rest/bookingmanagement/v1    
+    route:
+    - destination:
+        port:
+          number: 80
+        host: booking.default.svc.cluster.local
+        subset: v1
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: booking
+spec:
+  host: booking.default.svc.cluster.local
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+      

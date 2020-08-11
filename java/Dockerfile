@@ -1,6 +1,6 @@
 # maven:3.6-jdk-11-onbuild
 
-FROM maven:3.6-jdk-11 AS build
+FROM devonmts/mtsj-build:v1 AS build
 RUN mkdir -p /app/mtsj-booking
 WORKDIR /app/mtsj-booking
 COPY mtsj-booking/ /app/mtsj-booking
