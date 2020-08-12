@@ -16,6 +16,7 @@ RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false upd
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=nodebuild /app/dist/. /usr/share/nginx/html
 COPY docker-external-config.json /usr/share/nginx/html/docker-external-config.json
+
 EXPOSE 9080 443
 
 #HEALTHCHECK --interval=60s --timeout=30s --start-period=1s --retries=3 CMD curl --fail http://localhost:9080/health || exit 1

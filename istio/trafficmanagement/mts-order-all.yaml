@@ -1,47 +1,47 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: booking
+  name: order
   labels:
-    app: booking
-    service: booking
+    app: order
+    service: order
 spec:
   ports:
   - port: 9080
     name: http 
   selector:
-    app: booking
+    app: order
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: mtsj-booking
+  name: mtsj-order
   labels:
-    account: booking
+    account: order
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: booking-v1
+  name: order-v1
   labels:
-    app: booking
+    app: order
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: booking
+      app: order
       version: v1
   template:
     metadata:
       labels:
-        app: booking
+        app: order
         version: v1
     spec:
-      serviceAccountName: mtsj-booking
+      serviceAccountName: mtsj-order
       containers:
-      - name: booking
-        image: docker.io/devonmts/mtsj-booking:v1
+      - name: order
+        image: docker.io/devonmts/mtsj-order:v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080       
@@ -49,7 +49,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: booking
+  name: order
 spec:
   hosts:
   - "*"
@@ -58,11 +58,11 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /api/services/rest/bookingmanagement/v1  
+        prefix: /api/services/rest/ordermanagement/v1  
     rewrite:
-      uri:  /mythaistar/services/rest/bookingmanagement/v1    
+      uri:  /mythaistar/services/rest/ordermanagement/v1  
     route:
     - destination:
         port:
           number: 9080
-        host: booking
+        host: order

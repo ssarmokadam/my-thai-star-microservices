@@ -16,6 +16,8 @@ services:
     restart: always
     container_name: 'mts_booking'
     image: mtsj-booking/java:latest
+    ports:
+      - "9080:9080"
     networks:
       - my-thai-star 
       
@@ -24,6 +26,8 @@ services:
     restart: always
     container_name: 'mts_dish'
     image: mtsj-dish/java:latest
+    ports:
+      - "9080:9080"
     networks:
       - my-thai-star  
       
@@ -32,6 +36,8 @@ services:
     restart: always
     container_name: 'mts_image'
     image: mtsj-image/java:latest
+    ports:
+      - "9080:9080"
     networks:
       - my-thai-star 
       
@@ -40,6 +46,8 @@ services:
     restart: always
     container_name: 'mts_order'
     image: mtsj-order/java:latest
+    ports:
+      - "9080:9080"
     networks:
       - my-thai-star 
       
@@ -48,6 +56,8 @@ services:
     restart: always
     container_name: 'mts_user'
     image: mtsj-user/java:latest
+    ports:
+      - "9080:9080"
     networks:
       - my-thai-star
       
@@ -56,6 +66,8 @@ services:
     restart: always
     container_name: 'mts_angular'
     image: my-thai-star/angular:latest
+    ports:
+      - "9080:9080"
     networks:
       - my-thai-star
       

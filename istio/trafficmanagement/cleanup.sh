@@ -48,7 +48,7 @@ done
 OUTPUT=$(mktemp)
 export OUTPUT
 echo "Application cleanup may take up to one minute"
-kubectl delete -n ${NAMESPACE} -f "$SCRIPTDIR/mts-booking-all.yaml" > "${OUTPUT}" 2>&1
+kubectl delete -n ${NAMESPACE} -f "$SCRIPTDIR/mts-angualar-all.yaml" > "${OUTPUT}" 2>&1
 ret=$?
 function cleanup() {
   rm -f "${OUTPUT}"
