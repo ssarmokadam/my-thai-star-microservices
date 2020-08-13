@@ -55,7 +55,7 @@ spec:
   - "*"
   gateways:
   - mtsj-gateway
- http:
+  http:
   - match:
     - uri:
         prefix: /api/services/rest/imagemanagement/v1  

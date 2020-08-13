@@ -7,9 +7,9 @@ metadata:
   name: dish
 spec:
   ports:
-  - port: 80
+  - port: 9080
     protocol: TCP
-    targetPort: 8083
+    targetPort: 9080
     name: http    
   selector:
     app: dish
@@ -40,9 +40,9 @@ spec:
       containers:
       - name: dish
         image: mtsj-dish/java:latest
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8083
+        - containerPort: 9080
         resources: {}
 status: {}
 ---
@@ -77,6 +77,6 @@ spec:
     route:
     - destination:
         port:
-          number: 80
-        host: dish.default.svc.cluster.local
+          number: 9080
+        host: dish
 ---
