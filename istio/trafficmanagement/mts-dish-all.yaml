@@ -44,7 +44,36 @@ spec:
         image: docker.io/devonmts/mtsj-dish:v1
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 9080       
+        - containerPort: 9080   
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dish-v2
+  labels:
+    app: dish
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dish
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: dish
+        version: v2
+    spec:
+      serviceAccountName: mtsj-dish
+      containers:
+      - name: dish
+        image: docker.io/devonmts/mtsj-dish:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080   
+        
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -60,9 +89,23 @@ spec:
     - uri:
         prefix: /api/services/rest/dishmanagement/v1  
     rewrite:
-      uri:  /mythaistar/services/rest/dishmanagement/v1    
+      uri:  /mythaistar/services/rest/dishmanagement/v2    
     route:
     - destination:
         port:
           number: 9080
         host: dish
+        subset: v2
+      weight: 75
+  - match:
+    - uri:
+        prefix: /api/services/rest/dishmanagement/v1  
+    rewrite:
+      uri:  /mythaistar/services/rest/dishmanagement/v2    
+    route:
+    - destination:
+        port:
+          number: 9080
+        host: dish
+        subset: v2
+      weight: 25 
