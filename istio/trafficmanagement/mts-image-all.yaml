@@ -41,7 +41,7 @@ spec:
       serviceAccountName: mtsj-image
       containers:
       - name: image
-        image: docker.io/devonmts/mtsj-image:v1
+        image: docker.io/devonmts/mtsj-image-v1:1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080       

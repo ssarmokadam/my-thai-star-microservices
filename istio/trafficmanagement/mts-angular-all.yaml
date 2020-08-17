@@ -41,7 +41,7 @@ spec:
       serviceAccountName: mtsj-angular
       containers:
       - name: angular
-        image: docker.io/devonmts/mtsj-angular:v1
+        image: docker.io/devonmts/mtsj-angular-v1:1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080       
