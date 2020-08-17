@@ -52,17 +52,18 @@ metadata:
   name: image
 spec:
   hosts:
-  - "*"
+    - '*'
   gateways:
-  - mtsj-gateway
- http:
-  - match:
-    - uri:
-        prefix: /api/services/rest/imagemanagement/v1  
-    rewrite:
-      uri:  /mythaistar/services/rest/imagemanagement/v1    
-    route:
-    - destination:
-        port:
-          number: 9080
-        host: image
+    - mtsj-gateway
+  http:
+    - match: 
+      - uri:
+          prefix: /api/services/rest/imagemanagement/v1
+      rewrite:
+        uri: /mythaistar/services/rest/imagemanagement/v1
+      route:
+      - destination:
+          port:
+            number: 9080
+          host: image
+---      
