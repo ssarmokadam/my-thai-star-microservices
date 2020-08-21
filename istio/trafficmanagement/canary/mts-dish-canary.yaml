@@ -1,34 +1,17 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: dish
+  name: dish-route
 spec:
   hosts:
-  - "*"
-  gateways:
-  - mtsj-gateway
+  - dish.prod.svc.cluster.local
   http:
-  - match:
-    - uri:
-        prefix: /api/services/rest/dishmanagement/v1  
-    rewrite:
-      uri:  /mythaistar/services/rest/dishmanagement/v2    
-    route:
+  - route:
     - destination:
-        port:
-          number: 9080
         host: dish
         subset: v2
-      weight: 75
-  - match:
-    - uri:
-        prefix: /api/services/rest/dishmanagement/v1  
-    rewrite:
-      uri:  /mythaistar/services/rest/dishmanagement/v1  
-    route:
+      weight: 25
     - destination:
-        port:
-          number: 9080
         host: dish
         subset: v1
-      weight: 25 
+      weight: 75

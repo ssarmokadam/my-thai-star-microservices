@@ -46,8 +46,6 @@ spec:
         ports:
         - containerPort: 9080       
 ---
-<<<<<<< HEAD
-=======
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -75,4 +73,23 @@ spec:
         ports:
         - containerPort: 9080       
 ---
->>>>>>> a127e3293c29b02fae18b1ec7e4f5a6e6d2386ec
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: dish
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - mtsj-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api/services/rest/dishmanagement/v1  
+    rewrite:
+      uri:  /mythaistar/services/rest/dishmanagement/v1  
+    route:
+    - destination:
+        port:
+          number: 9080
+        host: dish
