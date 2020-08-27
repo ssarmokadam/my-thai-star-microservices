@@ -1,0 +1,145 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular
+  labels:
+    app: angular
+    service: angular
+spec:
+  ports:
+  - port: 9080
+    name: http 
+  selector:
+    app: angular
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mtsj-angular
+  labels:
+    account: angular
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-v1
+  labels:
+    app: angular
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: angular
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: angular
+        version: v1
+    spec:
+      serviceAccountName: mtsj-angular
+      containers:
+      - name: angular
+        image: docker.io/devonmts/mtsj-angular-v1:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080 
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dish
+  labels:
+    app: dish
+    service: dish
+spec:
+  ports:
+  - port: 9080
+    name: http 
+  selector:
+    app: dish
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mtsj-dish
+  labels:
+    account: dish
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dish-v1
+  labels:
+    app: dish
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dish
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: dish
+        version: v1
+    spec:
+      serviceAccountName: mtsj-dish
+      containers:
+      - name: dish
+        image: docker.io/devonmts/mtsj-dish-v1:1.1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: image
+  labels:
+    app: image
+    service: image
+spec:
+  ports:
+  - port: 9080
+    name: http 
+  selector:
+    app: image
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mtsj-image
+  labels:
+    account: image
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-v1
+  labels:
+    app: image
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: image
+        version: v1
+    spec:
+      serviceAccountName: mtsj-image
+      containers:
+      - name: image
+        image: docker.io/devonmts/mtsj-image-v1:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080       
+---        

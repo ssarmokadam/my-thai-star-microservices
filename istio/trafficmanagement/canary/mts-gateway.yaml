@@ -1,0 +1,85 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: mtsj-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: angular
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - mtsj-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /restaurant
+    - uri:
+        regex: '^.*\.(css|js|json)$'
+    - uri:
+        regex: '^.*\.(ico|png|jpg|svg)$'  
+    - uri:
+        exact: /config           
+    route:
+    - destination:
+        port:
+          number: 9080
+        host: angular
+        
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: dish
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - mtsj-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api/services/rest/dishmanagement/v1  
+    rewrite:
+      uri:  /mythaistar/services/rest/dishmanagement/v1  
+    route:
+    - destination:
+        port:
+          number: 9080
+        host: dish
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: image
+spec:
+  hosts:
+    - '*'
+  gateways:
+    - mtsj-gateway
+  http:
+    - match: 
+      - uri:
+          prefix: /api/services/rest/imagemanagement/v1
+      rewrite:
+        uri: /mythaistar/services/rest/imagemanagement/v1
+      route:
+      - destination:
+          port:
+            number: 9080
+          host: image
+---      

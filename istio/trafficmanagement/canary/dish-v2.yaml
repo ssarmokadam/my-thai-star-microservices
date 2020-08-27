@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dish-v2
+  labels:
+    app: dish
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dish
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: dish
+        version: v2
+    spec:
+      serviceAccountName: mtsj-dish
+      containers:
+      - name: dish
+        image: docker.io/devonmts/mtsj-dish-v2:1.1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080       
+---
