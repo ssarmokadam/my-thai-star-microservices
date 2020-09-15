@@ -504,7 +504,7 @@ public class OrdermanagementImpl extends AbstractComponentFacade implements Orde
 
   private boolean cancellationAllowed(OrderEntity order) {
 
-    BookingCto booking = this.bookingManagement.findBooking(order.getBookingId());
+    BookingCto booking = this.bookingManagement.getBooking(order.getBookingId());
     Instant bookingTime = booking.getBooking().getBookingDate();
     long bookingTimeMillis = bookingTime.toEpochMilli();
     long cancellationLimit = bookingTimeMillis - (3600000 * this.hoursLimit);

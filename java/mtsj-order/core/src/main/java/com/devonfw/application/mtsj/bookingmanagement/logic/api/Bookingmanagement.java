@@ -1,41 +1,34 @@
 package com.devonfw.application.mtsj.bookingmanagement.logic.api;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.devonfw.application.mtsj.bookingmanagement.common.api.to.BookingCto;
 import com.devonfw.application.mtsj.bookingmanagement.common.api.to.InvitedGuestEto;
-import com.devonfw.application.mtsj.general.common.impl.config.FeignConfig;
+import com.devonfw.module.rest.common.api.RestService;
 
-@FeignClient(value = "booking", url = "${feignclient.booking.url}", configuration = FeignConfig.class)
-public interface Bookingmanagement {
+@Path("/bookingmanagement/v1")
+public interface Bookingmanagement extends RestService {
 
-  @RequestMapping(method = RequestMethod.GET, value = "/booking/{id}/", produces = "application/json", consumes = "application/json")
+  @GET
+  @Path("/booking/{id}/")
   public BookingCto getBooking(@PathParam("id") long id);
 
   /**
    * @param token
    * @return
    */
-  @RequestMapping(method = RequestMethod.GET, value = "/booking/{token}/", produces = "application/json", consumes = "application/json")
-  public BookingCto findBookingByToken(@PathVariable("token") String token);
+  @GET
+  @Path("/booking/{token}/")
+  public BookingCto findBookingByToken(@PathParam("token") String token);
 
   /**
    * @param token
    * @return
    */
-  @RequestMapping(method = RequestMethod.GET, value = "/booking/{token}/", produces = "application/json", consumes = "application/json")
-  public InvitedGuestEto findInvitedGuestByToken(@PathVariable("token") String token);
-
-  /**
-   * @param bookingId
-   * @return
-   */
-  @RequestMapping(method = RequestMethod.GET, value = "/booking/{bookingId}/", produces = "application/json", consumes = "application/json")
-  public BookingCto findBooking(@PathVariable("bookingId") Long bookingId);
+  @GET
+  @Path("/booking/{token}/")
+  public InvitedGuestEto findInvitedGuestByToken(@PathParam("token") String token);
 
 }

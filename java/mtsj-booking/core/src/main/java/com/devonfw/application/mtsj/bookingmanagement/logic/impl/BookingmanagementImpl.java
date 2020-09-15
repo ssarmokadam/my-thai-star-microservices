@@ -46,7 +46,7 @@ import com.devonfw.application.mtsj.general.logic.base.AbstractComponentFacade;
 import com.devonfw.application.mtsj.mailservice.logic.api.Mail;
 import com.devonfw.application.mtsj.ordermanagement.common.api.to.OrderCto;
 import com.devonfw.application.mtsj.ordermanagement.common.api.to.OrderEto;
-import com.devonfw.application.mtsj.ordermanagement.logic.api.Ordermanagement;
+import com.devonfw.application.mtsj.ordermanagement.logic.impl.OrdermanagementProxy;
 import com.devonfw.application.mtsj.usermanagement.common.api.to.UserEto;
 
 /**
@@ -89,9 +89,15 @@ public class BookingmanagementImpl extends AbstractComponentFacade implements Bo
   @Inject
   private TableRepository tableDao;
 
-  @Inject
-  private Ordermanagement orderManagement;
+  // @Inject
+  // private Ordermanagement orderManagement;
 
+  @Inject
+  private OrdermanagementProxy ordermanagementRestService;
+
+  /*
+   * @Inject private ServiceClientFactory serviceClientFactory;
+   */
   @Inject
   private Mail mailService;
 
@@ -111,12 +117,27 @@ public class BookingmanagementImpl extends AbstractComponentFacade implements Bo
     BookingCto cto = new BookingCto();
     cto.setBooking(getBeanMapper().map(entity, BookingEto.class));
     cto.setTable(getBeanMapper().map(entity.getTable(), TableEto.class));
-    OrderEto orderEto = new OrderEto();
-    cto.setOrder(orderEto);
+    // cto.setOrder(getOrder(entity.getId()));
     cto.setInvitedGuests(getBeanMapper().mapList(entity.getInvitedGuests(), InvitedGuestEto.class));
-    List<OrderEto> orders = new ArrayList<>();
+    List<OrderEto> orders = getOrders(entity.getId());
     cto.setOrders(orders);
     return cto;
+  }
+
+  private List<OrderEto> getOrders(Long bookingId) {
+
+    List<OrderEto> orderEtos = new ArrayList<>();
+
+    try {
+      List<OrderCto> orders = this.ordermanagementRestService.findOrders(3);
+      for (OrderCto order : orders) {
+        orderEtos.add(order.getOrder());
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return orderEtos;
   }
 
   @Override
@@ -180,9 +201,9 @@ public class BookingmanagementImpl extends AbstractComponentFacade implements Bo
   @Override
   public boolean deleteBooking(Long bookingId) {
 
-    List<OrderCto> bookingOrders = this.orderManagement.findOrders(bookingId);
+    List<OrderCto> bookingOrders = this.ordermanagementRestService.findOrders(bookingId);
     for (OrderCto orderCto : bookingOrders) {
-      boolean deleteOrderResult = this.orderManagement.deleteOrder(orderCto.getOrder().getId());
+      boolean deleteOrderResult = this.ordermanagementRestService.deleteOrder(orderCto.getOrder().getId());
       if (deleteOrderResult) {
         LOG.debug("The order with id '{}' has been deleted.", orderCto.getOrder().getId());
       }
@@ -297,10 +318,10 @@ public class BookingmanagementImpl extends AbstractComponentFacade implements Bo
   public boolean deleteInvitedGuest(Long invitedGuestId) {
 
     InvitedGuestEntity invitedGuest = getInvitedGuestDao().find(invitedGuestId);
-    List<OrderCto> guestOrdersCto = this.orderManagement
+    List<OrderCto> guestOrdersCto = this.ordermanagementRestService
         .findOrdersByBookingToken(invitedGuest.getBooking().getBookingToken());
     for (OrderCto orderCto : guestOrdersCto) {
-      this.orderManagement.deleteOrder(orderCto.getOrder().getId());
+      this.ordermanagementRestService.deleteOrder(orderCto.getOrder().getId());
     }
     getInvitedGuestDao().delete(invitedGuest);
     LOG.debug("The invitedGuest with id '{}' has been deleted.", invitedGuestId);
@@ -386,9 +407,9 @@ public class BookingmanagementImpl extends AbstractComponentFacade implements Bo
     InvitedGuestEntity invitedEntity = getInvitedGuestDao().find(invited.getId());
     invited.setAccepted(false);
 
-    List<OrderCto> guestOrdersCto = this.orderManagement.findOrdersByInvitedGuest(invitedEntity.getId());
+    List<OrderCto> guestOrdersCto = this.ordermanagementRestService.findOrdersByInvitedGuest(invitedEntity.getId());
     for (OrderCto orderCto : guestOrdersCto) {
-      this.orderManagement.deleteOrder(orderCto.getOrder().getId());
+      this.ordermanagementRestService.deleteOrder(orderCto.getOrder().getId());
     }
     BookingCto booking = findBooking(invited.getBookingId());
     sendConfirmationActionToHost(booking, invited, "declined");
